@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="dashboard">
+    <!-- Welcome Banner -->
+    <div class="dashboard-header bg-primary text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">Welcome back, {{ current_user.first_name }}!</h1>
+                    <p class="mb-0">Track your progress and continue learning</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{{ url_for('courses') }}" class="btn btn-light">Browse More Courses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <!-- Progress Overview -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-book-open stats-icon"></i>
+                    <h3 class="stats-number">{{ stats.total_courses }}</h3>
+                    <p class="stats-label">Enrolled Courses</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-check-circle stats-icon"></i>
+                    <h3 class="stats-number">{{ stats.completed_courses }}</h3>
+                    <p class="stats-label">Completed</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-clock stats-icon"></i>
+                    <h3 class="stats-number">{{ stats.hours_spent }}h</h3>
+                    <p class="stats-label">Hours Spent</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-certificate stats-icon"></i>
+                    <h3 class="stats-number">{{ stats.certificates }}</h3>
+                    <p class="stats-label">Certificates</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Courses -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Current Courses</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for course in current_courses %}
+                        <div class="course-progress-card mb-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">{{ course.title }}</h6>
+                                    <p class="text-muted small mb-0">{{ course.description }}</p>
+                                </div>
+                                <span class="badge bg-primary">{{ course.progress }}%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar" role="progressbar" style="width: {{ course.progress }}%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <small class="text-muted">Last accessed: {{ course.last_accessed }}</small>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Continue</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Deadlines -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Upcoming Deadlines</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for deadline in deadlines %}
+                        <div class="deadline-item {% if loop.last %}border-bottom-0{% endif %}">
+                            <div class="deadline-date">{{ deadline.date }}</div>
+                            <h6 class="deadline-title mb-1">{{ deadline.title }}</h6>
+                            <p class="deadline-course text-muted mb-0">{{ deadline.course }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Recent Achievements -->
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">Recent Achievements</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for achievement in achievements %}
+                        <div class="achievement-item">
+                            <div class="achievement-icon">
+                                <i class="{{ achievement.icon }}"></i>
+                            </div>
+                            <div class="achievement-info">
+                                <h6 class="mb-1">{{ achievement.title }}</h6>
+                                <small class="text-muted">{{ achievement.date }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

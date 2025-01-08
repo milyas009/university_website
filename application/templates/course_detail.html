@@ -1,0 +1,232 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="course-detail">
+    <!-- Course Header -->
+    <div class="course-header bg-primary text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="course-code mb-2 d-inline-block">{{ course.course_id }}</span>
+                    <h1 class="display-5 mb-3">{{ course.title }}</h1>
+                    <p class="lead mb-4">{{ course.description }}</p>
+                    <div class="course-meta">
+                        <span class="me-4"><i class="fas fa-clock me-2"></i>{{ course.duration }}</span>
+                        <span class="me-4"><i class="fas fa-book me-2"></i>{{ course.credits }} Credits</span>
+                        <span><i class="fas fa-users me-2"></i>{{ course.enrolled_count }} Students</span>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center text-lg-end mt-4 mt-lg-0">
+                    {% if current_user.is_authenticated %}
+                        {% if not is_enrolled %}
+                            <form action="{{ url_for('enrollment') }}" method="POST">
+                                <input type="hidden" name="courseID" value="{{ course.course_id }}">
+                                <button type="submit" class="btn btn-light btn-lg">Enroll Now</button>
+                            </form>
+                        {% else %}
+                            <a href="#content" class="btn btn-light btn-lg">Continue Learning</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-light btn-lg">Login to Enroll</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row">
+            <!-- Course Content -->
+            <div class="col-lg-8">
+                <!-- Course Tabs -->
+                <ul class="nav nav-tabs mb-4" id="courseTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="overview-tab" data-bs-toggle="tab" href="#overview">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="curriculum-tab" data-bs-toggle="tab" href="#curriculum">Curriculum</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="instructor-tab" data-bs-toggle="tab" href="#instructor">Instructor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews">Reviews</a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="courseTabContent">
+                    <!-- Overview Tab -->
+                    <div class="tab-pane fade show active" id="overview">
+                        <h3>About This Course</h3>
+                        <p>{{ course.full_description }}</p>
+                        
+                        <h4 class="mt-4">What You'll Learn</h4>
+                        <div class="row g-4">
+                            {% for outcome in course.learning_outcomes %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                    <span>{{ outcome }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <h4 class="mt-4">Requirements</h4>
+                        <ul class="list-unstyled">
+                            {% for req in course.requirements %}
+                            <li class="mb-2">
+                                <i class="fas fa-circle text-primary me-2" style="font-size: 0.5rem; vertical-align: middle;"></i>
+                                {{ req }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Curriculum Tab -->
+                    <div class="tab-pane fade" id="curriculum">
+                        <div class="accordion" id="curriculumAccordion">
+                            {% for module in course.modules %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#module{{ loop.index }}">
+                                        {{ module.title }}
+                                    </button>
+                                </h2>
+                                <div id="module{{ loop.index }}" class="accordion-collapse collapse" 
+                                     data-bs-parent="#curriculumAccordion">
+                                    <div class="accordion-body">
+                                        <ul class="list-group list-group-flush">
+                                            {% for lesson in module.lessons %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas {{ lesson.type_icon }} me-2"></i>
+                                                    {{ lesson.title }}
+                                                </div>
+                                                <span class="text-muted">{{ lesson.duration }}</span>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Instructor Tab -->
+                    <div class="tab-pane fade" id="instructor">
+                        <div class="instructor-profile">
+                            <div class="d-flex align-items-center mb-4">
+                                <img src="{{ course.instructor.image }}" alt="{{ course.instructor.name }}" 
+                                     class="rounded-circle me-3" style="width: 100px; height: 100px; object-fit: cover;">
+                                <div>
+                                    <h3 class="mb-1">{{ course.instructor.name }}</h3>
+                                    <p class="text-muted mb-2">{{ course.instructor.title }}</p>
+                                    <div class="instructor-stats">
+                                        <span class="me-3"><i class="fas fa-star text-warning me-1"></i>4.8 Instructor Rating</span>
+                                        <span class="me-3"><i class="fas fa-user-graduate me-1"></i>{{ course.instructor.students }} Students</span>
+                                        <span><i class="fas fa-play-circle me-1"></i>{{ course.instructor.courses }} Courses</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>{{ course.instructor.bio }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Tab -->
+                    <div class="tab-pane fade" id="reviews">
+                        <div class="reviews-summary mb-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 text-center">
+                                    <h1 class="display-2 mb-0">4.8</h1>
+                                    <div class="text-warning mb-2">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <p class="text-muted">Course Rating</p>
+                                </div>
+                                <div class="col-md-8">
+                                    <!-- Rating bars -->
+                                    {% for i in range(5, 0, -1) %}
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="text-muted me-2" style="width: 30px;">{{ i }} <i class="fas fa-star text-warning"></i></div>
+                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" style="width: {{ course.ratings[i] }}%"></div>
+                                        </div>
+                                        <div class="text-muted ms-2" style="width: 40px;">{{ course.ratings[i] }}%</div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review List -->
+                        <div class="reviews-list">
+                            {% for review in course.reviews %}
+                            <div class="review-item border-bottom pb-4 mb-4">
+                                <div class="d-flex mb-3">
+                                    <img src="{{ review.user_image }}" alt="{{ review.user_name }}" 
+                                         class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="mb-1">{{ review.user_name }}</h6>
+                                        <div class="text-warning">
+                                            {% for _ in range(review.rating) %}
+                                            <i class="fas fa-star"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <small class="text-muted">{{ review.date }}</small>
+                                    </div>
+                                </div>
+                                <p class="mb-0">{{ review.comment }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Sidebar -->
+            <div class="col-lg-4">
+                <div class="card course-sidebar">
+                    <div class="card-body">
+                        <h5 class="card-title">Course Features</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                Duration: {{ course.duration }}
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-book text-primary me-2"></i>
+                                {{ course.lessons_count }} lessons
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-certificate text-primary me-2"></i>
+                                Certificate of completion
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-globe text-primary me-2"></i>
+                                Full lifetime access
+                            </li>
+                        </ul>
+                        
+                        <hr>
+                        
+                        <h5 class="card-title">Share This Course</h5>
+                        <div class="social-share">
+                            <a href="#" class="btn btn-outline-primary me-2"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-outline-primary me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="btn btn-outline-primary me-2"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="btn btn-outline-primary"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Class Schedule</h1>
+    
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Time</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>9:00 AM</td>
+                    <td>PHP 101</td>
+                    <td>Java 1</td>
+                    <td>PHP 101</td>
+                    <td>Java 1</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>11:00 AM</td>
+                    <td>Angular 1</td>
+                    <td>-</td>
+                    <td>Angular 1</td>
+                    <td>-</td>
+                    <td>Java 2</td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

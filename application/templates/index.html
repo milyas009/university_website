@@ -1,0 +1,133 @@
+<!-- index.html -->
+
+{% extends "layout.html" %}
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 py-5">
+                <h1 class="display-4 fw-bold mb-4">Start Your Learning Journey Today</h1>
+                <p class="lead mb-4">Discover top-quality courses in programming, web development, and technology. Learn at your own pace and build your future.</p>
+                <div class="hero-buttons">
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-3">Get Started</a>
+                        <a href="{{ url_for('courses') }}" class="btn btn-outline-primary btn-lg">Browse Courses</a>
+                    {% else %}
+                        <a href="{{ url_for('courses') }}" class="btn btn-primary btn-lg me-3">Explore Courses</a>
+                        <a href="{{ url_for('my_courses') }}" class="btn btn-outline-primary btn-lg">My Learning</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="{{ url_for('static', filename='images/hero-image.png') }}" alt="Learning" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses Section -->
+<section class="featured-courses py-5">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="display-6 fw-bold">Popular Courses</h2>
+            <p class="text-muted">Start learning from our most popular courses</p>
+        </div>
+        <div class="row g-4">
+            {% for course in featured_courses %}
+            <div class="col-md-4">
+                <div class="course-card h-100">
+                    <div class="course-image-wrapper">
+                        <img src="{{ url_for('static', filename='images/courses/' + course.image) }}" 
+                             class="card-img-top" alt="{{ course.title }}"
+                             onerror="this.src='{{ url_for('static', filename='images/course-default.jpg') }}'">
+                        <div class="course-badge">{{ course.credits }} Credits</div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        <p class="card-text text-muted">{{ course.description }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <a href="{{ url_for('course_detail', course_id=course.course_id) }}" 
+                           class="btn btn-outline-primary w-100">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('courses') }}" class="btn btn-primary">View All Courses</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h4>Learn Online</h4>
+                    <p class="text-muted">Access courses anytime, anywhere with flexible learning options</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h4>Get Certified</h4>
+                    <p class="text-muted">Earn certificates upon completion of your courses</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Expert Instructors</h4>
+                    <p class="text-muted">Learn from industry professionals with real experience</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-5">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3 col-6">
+                <div class="stats-item">
+                    <h2 class="display-4 fw-bold text-primary">50+</h2>
+                    <p class="text-muted">Courses</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-item">
+                    <h2 class="display-4 fw-bold text-primary">1000+</h2>
+                    <p class="text-muted">Students</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-item">
+                    <h2 class="display-4 fw-bold text-primary">20+</h2>
+                    <p class="text-muted">Instructors</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stats-item">
+                    <h2 class="display-4 fw-bold text-primary">95%</h2>
+                    <p class="text-muted">Success Rate</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+

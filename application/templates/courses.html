@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Course Offerings</h1>
+    <h3 class="mb-4">Term: {{ term }}</h3>
+
+    <div class="row g-4">
+        {% for data in courseData %}
+        <div class="col-md-6 col-lg-4">
+            <div class="course-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ data.title }}</h5>
+                    <p class="card-text">{{ data.description }}</p>
+                    <div class="course-info mb-3">
+                        <span class="badge bg-primary me-2">{{ data.credits }} Credits</span>
+                        <span class="badge bg-secondary">{{ data.term }}</span>
+                    </div>
+                    {% if current_user.is_authenticated %}
+                        <form action="{{ url_for('enrollment') }}" method="POST" class="enrollment-form">
+                            <input type="hidden" name="courseID" value="{{ data.courseID }}">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-graduation-cap me-2"></i>Enroll
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-lock me-2"></i>Login to Enroll
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add this to prevent multiple form submissions -->
+{% block javascript %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all enrollment forms
+    const enrollmentForms = document.querySelectorAll('.enrollment-form');
+    
+    // Add submit handler to each form
+    enrollmentForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            // Get the submit button
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            // Disable the button and change text
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enrolling...';
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

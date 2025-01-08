@@ -1,0 +1,38 @@
+<div class="search-section mb-5">
+    <div class="container">
+        <div class="search-wrapper">
+            <form action="{{ url_for('search') }}" method="GET" class="search-form">
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" 
+                                   class="form-control" 
+                                   name="q" 
+                                   placeholder="Search courses..."
+                                   value="{{ request.args.get('q', '') }}"
+                                   autocomplete="off"
+                                   id="searchInput">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <select class="form-select" name="category">
+                            <option value="">All Categories</option>
+                            <option value="web" {% if request.args.get('category') == 'web' %}selected{% endif %}>Web Development</option>
+                            <option value="mobile" {% if request.args.get('category') == 'mobile' %}selected{% endif %}>Mobile Development</option>
+                            <option value="data" {% if request.args.get('category') == 'data' %}selected{% endif %}>Data Science</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3">
+                        <button type="submit" class="btn btn-primary w-100">Search Courses</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Live Search Results -->
+            <div class="live-search-results" id="liveSearchResults"></div>
+        </div>
+    </div>
+</div> 

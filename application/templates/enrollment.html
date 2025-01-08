@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        {% if data %}
+            <h1>You are Enrolled in:</h1>
+            <div class="card mt-4 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Course Details</h5>
+                    <p class="card-text">Course ID: {{ data.id }}</p>
+                    <p class="card-text">Course Title: {{ data.title }}</p>
+                    <p class="card-text">Course Term: {{ data.term }}</p>
+                    <a href="{{ url_for('courses') }}" class="btn btn-primary">Back to Courses</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Enrollment information unavailable.
+                <a href="{{ url_for('courses') }}" class="btn btn-link">Return to Courses</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
